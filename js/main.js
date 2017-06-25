@@ -1,76 +1,81 @@
-const studentList = $('.student-item');
-const studentsNumber = studentList.length;
-const studentsPerPage = 10;
-const pageCounter = Math.ceil(studentsNumber / studentsPerPage);
-const $pages = $('.page');
-const $pageHeader = $('.page-header')[0];
-const $studentEmail = $('.email').map(function() {
-  return $(this).text();
+/* Variables */
+const studentList = $('.student-item');                           //All the students in one variable
+const studentsNumber = studentList.length;                        //Counting how many students are
+const studentsPerPage = 10;                                       //How many students we want in each page
+const pageCounter = Math.ceil(studentsNumber / studentsPerPage);  //Dividing the students between the students in each page, to get the number of pages needed
+const $pages = $('.page');                                        //The div holding all the content (lists, page buttons, and search bar)
+const $pageHeader = $('.page-header')[0];                         //The header of the div
+const studentEmail = $('.email').map(function() {                //Getting the students email
+  return $(this).text();                                          //map function to get the text in the email class
 });
-const $studentName = $('.student-details h3').map(function() {
-  return $(this).text();
+const studentName = $('.student-details h3').map(function() {    //getting the students name
+  return $(this).text();                                          //map function to get the text in the h3 tags
 });
 
 
-function showPage(page) {
-  studentList.hide();
-  let studentsToDisplay = [];
-  for (let i = 0; i < studentsNumber; i += 1) {
-    if (i >= page * studentsPerPage && i <= page * studentsPerPage + studentsPerPage - 1) {
-      studentsToDisplay.push(studentList[i]);
-      $(studentList[i]).show();
+function showPage(page) {                                         //function to get 10 students per page
+  studentList.hide();                                             //Hiding all the students
+  let studentsToDisplay = [];                                     //Empty array used to get the 10 students per page
+  for (let i = 0; i < studentsNumber; i += 1) {                   //Looping the students list to get the 10 students in each page and hide the rest
+    if (i >= page * studentsPerPage && i <= page * studentsPerPage + studentsPerPage - 1) {  //Setting the statements to give 10 students to each page
+      studentsToDisplay.push(studentList[i]);                     //Passing the students to the array
+      $(studentList[i]).show();                                   //Showing the students selected
     }
   }
-  return studentsToDisplay;
+  return studentsToDisplay;                                       //Returning the array
 }
 
-showPage(0);
+showPage(0);                                                      //Calling the function
 
-function appendPageLinks (studentList) {
-  let createUl = document.createElement("ul");
-  for (let i = 1; i <= pageCounter; i += 1) {
-    let createLi = document.createElement("li");
-    let createLink = document.createElement("a");
-    createLink.href = '#' + i;
-    createLink.textContent = i;
-    createLink.className = "page-buttons"
-    createLi.append(createLink);
-    createUl.append(createLi);
-    $pages.append(createUl);
-    createLink.addEventListener("click", () => {
-      showPage(i - 1);
+function appendPageLinks (studentList) {                          //Function to create the page buttons
+  let createUl = document.createElement("ul");                    //Creating an ul element
+  for (let i = 1; i <= pageCounter; i += 1) {                     //Looping to create enough page buttons for every 10 students
+    let createLi = document.createElement("li");                  //Creating an li element
+    let createLink = document.createElement("a");                 //Creating a link element
+    createLink.href = '#' + i;                                    //Giving the href to the link
+    createLink.textContent = i;                                   //Getting some text to the link
+    createLink.className = "page-buttons"                         //Giving it a class
+    createLi.append(createLink);                                  //Appending the link to the li element
+    createUl.append(createLi);                                    //Appending the li to the ul element
+    $pages.append(createUl);                                      //Appending the ul to the end of the content div
+    createLink.addEventListener("click", () => {                  //Listening for clicks
+      showPage(i - 1);                                            //Showing the selected page with the respective students
     })
   }
 }
 
-appendPageLinks();
-
-function createSearch() {
-  let createInput = document.createElement("input");
-  let createButton = document.createElement("button");
-  createInput.type = "search";
-  createInput.id = "input";
-  createInput.className = "student-search";
-  createInput.placeholder = "Insert student's name...";
-  createButton.textContent = "Search";
-  createButton.className = "student-search";
-  createButton.id = "search";
-  $pageHeader.appendChild(createInput);
-  createInput.after(createButton);
-}
-
-createSearch();
+appendPageLinks();                                                //Calling the buttons function
 
 /*function searchEngine() {
-  let input = document.getElementById("#input");
-  let filter = input.value;
-  for(i = 0; i < studentList.length; i += 1) {
-    if($studentName.indexOf(filter) > -1 || $studentEmail.indexOf(filter) > -1) {
-      studentList[i].show();
-    } else {
-      studentList[i].hide();
-    }
-  }
+  const input = $("#input");
+  const inputVal = input.val();
+  const searchButton = document.getElementById("search");
+  const matchedStudent = [];
+  const $page = parseInt($(".pagination .active"));
+  searchButton.addEventListener("click", function () {
+      $(studentList).hide();
+      console.log(inputVal);
+      for (let i = 0; i < studentsNumber; i += 1) {
+          if (studentName[i].includes(input) || studentEmail[i].includes(input)) {
+              matchedStudent.push(studentList[i]);
+          }
+      }
+      if (matchedStudent.length > 10) {
+          for (let i = 0; i < matchedStudent.length; i += 1) {
+              if (i >= $page * studentsPerPage && i <= $page * studentsPerPage + studentsPerPage - 1) {
+                  studentsToDisplay.push(studentList[i]);
+                  $(studentList[i]).show();
+              }
+          }
+      }
+      if (matchedStudent.length === 0) {
+          alert("Sorry, no students matched your search.");
+          $(studentList).show();
+          showPage();
+      }
+      showPage($page, matchedStudent);
+      return matchedStudent;
+  });
 }
 
 searchEngine();*/
